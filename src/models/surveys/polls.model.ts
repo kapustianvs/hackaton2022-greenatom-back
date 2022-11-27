@@ -2,12 +2,12 @@ export interface IQuestion {
     title: string,
     text: string,
     variants: string[]
-    trueAnswer: {
+    true_answer: {
         title: string
         text: string
-        value: string
+        value?: string
     }
-    falseAnswer: {
+    false_answer: {
         title: string
         text: string
     }

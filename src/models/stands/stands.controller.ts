@@ -29,7 +29,7 @@ export const editStand = async (req: Request, res: Response) => {
         if (stand) {
             stand.update(req.body)
         } else {
-            res.status(404)
+            res.send(404)
         }
         res.status(200).send(stand)
     } catch (err) {

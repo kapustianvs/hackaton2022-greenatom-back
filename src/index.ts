@@ -2,10 +2,10 @@ import express, { Request, Response } from 'express'
 import { Stand } from './models/stands/stands.model';
 import { sequelize } from './database';
 import bodyParser from 'body-parser';
-import { createSurvey } from './models/surveys/survey.controller';
+import { createSurvey, getSurvey, survey14DaysStatistics } from './models/surveys/survey.controller';
 import { authenticateToken, generateAccessToken } from './utils/jwt';
 import { createStand, editStand, getAllStands } from './models/stands/stands.controller';
-import { viewPolls } from "./models/admin/admin.controller"
+import { viewSurveys } from "./models/surveys/survey.controller"
 
 const app = express();
 
@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 const _syncronizeDatabase = async () => {
 
     try {
-        await sequelize.sync({ alter: true })
+        await sequelize.sync({ force: true })
         // Stand.bulkCreate([{ title: 'Test1', "organiser_id": 1, "parent_event_id": 1 }])
         console.log("Database has been syncronized succesfully");
     }
@@ -38,9 +38,11 @@ app.get("/", async (_, res) => {
     }
 })
 
-app.get('/stands', getAllStands)
+app.get('/stands', authenticateToken, getAllStands)
 
-app.post('/stand', authenticateToken, createStand)
+app.post('/stands', authenticateToken, createStand)
+
+app.get("/stands/:id", authenticateToken, editStand)
 
 app.post('/authenticate', (req, res) => {
     if (req.body.username) {
@@ -53,9 +55,10 @@ app.post('/authenticate', (req, res) => {
 
 app.post("/participate", createSurvey)
 
-app.get("/viewPolls", authenticateToken, viewPolls)
+app.get('/surveys/stats', authenticateToken, survey14DaysStatistics)
+app.get("/surveys", authenticateToken, viewSurveys)
+app.get("/surveys/:id", authenticateToken, getSurvey)
 
-app.get("/stand/:id", authenticateToken, editStand)
 
 app.listen(3000, '10.131.56.252', () => {
     console.log("Server has started succesfully")

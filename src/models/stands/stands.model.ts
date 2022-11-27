@@ -1,11 +1,11 @@
+import { ISurvey, Survey } from "../surveys/surveys.model";
 import { DataTypes, Model } from "sequelize";
-import { CreateReplOptions } from "ts-node";
 import { sequelize } from "../../database";
 
 interface IStand {
     id?: number,
     title: string,
-    
+    // survey: any[]
     // description: string,
 }
 
@@ -18,5 +18,6 @@ const Stand = sequelize.define<Model<IStand>>("Stand", {
     //     type: DataTypes.STRING
     // },
 })
+Stand.hasMany(Survey)
 
 export { Stand }
